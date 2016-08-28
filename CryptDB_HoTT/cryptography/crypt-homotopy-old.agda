@@ -4,28 +4,20 @@ open import Data.Bool
 open import Function renaming (_∘_ to _○_)
 open import Data.Product using (_×_; _,_; Σ; Σ-syntax; proj₁; proj₂)
 
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
-open import programming.agda_lib.Interval
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Interval
 
-open import programming.cryptography.crypto-onion
-open import programming.cryptography.Paillier-Cryptosystem
-open import programming.cryptography.increment-path
-open import programming.cryptography.encrypted-increment
+open import CryptDB_HoTT.cryptography.crypto-onion-old
+open import CryptDB_HoTT.cryptography.Paillier-Cryptosystem
+open import CryptDB_HoTT.cryptography.increment-path
+open import CryptDB_HoTT.cryptography.encrypted-increment
 
-open import programming.agda_lib.Equiv
-
-module programming.cryptography.crypt-homotopy where
+module CryptDB_HoTT.cryptography.crypt-homotopy-old where
 
 open hit
-
-Path : {A : Set} → A → A → Set
-Path a b = (a ≡ b)
-
-data Singleton {A : Set} (x : A) : Set where
-  _with≡_ : (y : A) → x ≡ y → Singleton x
 
 postulate -- homotopies
    paillier-hom : {l : Nat} {i : Fin l} → Path ((paillier-crypto {l}) ∘ (increment100-crypto {l} i) ∘ ! (paillier-crypto {l})) (increment100 {l} i)

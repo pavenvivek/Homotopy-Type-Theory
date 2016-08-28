@@ -2,13 +2,13 @@
 
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 
-open import programming.agda_lib.Char
-open import programming.agda_lib.String
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Equiv
-open import programming.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Char
+open import CryptDB_HoTT.agda_lib.String
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Vector
 
-module programming.partial_equiv where
+module CryptDB_HoTT.partial_equiv_old where
   
   module hit where
 
@@ -195,18 +195,10 @@ module programming.partial_equiv where
   IPBij[dec] : {l : Nat} {s : String} → ap (IPBij {l} {s}) (dec {l} s) ≡ (enc-dec-path {l} {s})
   IPBij[dec] {l} {s} = βrec-dec {l} {s} (Vec String l) (String × Vec String l) (enc-dec-path {l} {s})
 
-
-  coe-biject : {A : Set} {l : Nat} → ((String × Vec A l) ≡ Vec A (suc l)) → ((String × Vec A l) ≃ Vec A (suc l))
-  coe-biject path with univalence 
-  ... | (f , eq) = f path
-
-  coe : {A : Set} {l : Nat} → ((String × Vec A l) ≡ Vec A (suc l)) → ((String × Vec A l) → Vec A (suc l))
-  coe path = fst (coe-biject path)
-
   --- Partial Bijection -end-
   
   interp-add : {m : Nat} {s : String} → (patch : (tab m ↔ s) ≡ (tab (suc m))) → (String × Vec String m) → (Vec String (suc m))
-  interp-add {m} {s} addP2 = coe (ap (I {m} {s}) addP2)
+  interp-add {m} {s} addP2 = coe' (ap (I {m} {s}) addP2)
 
   interp-add' : {m : Nat} {s : String} → (patch : (tab m ↔ s) ≡ (tab (suc m))) → (Vec String m → Vec String (suc m))
   interp-add' {m} {s} addP2 = add s
@@ -215,11 +207,11 @@ module programming.partial_equiv where
   coe-biject' path with univalence 
   ... | (f , eq) = f path
 
-  coe' : {A : Set} {l : Nat} → ((Vec A (suc l)) ≡ (String × Vec A l)) → (Vec A (suc l) → (String × Vec A l))
-  coe' path = fst (coe-biject' path)
+  coe'' : {A : Set} {l : Nat} → ((Vec A (suc l)) ≡ (String × Vec A l)) → (Vec A (suc l) → (String × Vec A l))
+  coe'' path = fst (coe-biject' path)
 
   interp-rm : {m : Nat} {s : String} → (patch : (tab (suc m)) ≡ (tab m ↔ s)) → (Vec String (suc m)) → (String × Vec String m)
-  interp-rm {m} {s} rmP2 = coe' (ap (I {m} {s}) rmP2)
+  interp-rm {m} {s} rmP2 = coe'' (ap (I {m} {s}) rmP2)
 
   interp-rm' : {m : Nat} {s : String} → (patch : (tab (suc m)) ≡ (tab m ↔ s)) → (Vec String (suc m) → Vec String m)
   interp-rm' {m} {s} rmP2 = rm

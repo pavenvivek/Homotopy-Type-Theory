@@ -2,13 +2,13 @@
 
 open import Data.Product using (_×_; _,_)
 
-open import programming.agda_lib.Char
-open import programming.agda_lib.String
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Equiv
-open import programming.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Char
+open import CryptDB_HoTT.agda_lib.String
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Vector
 
-module programming.db_homotopy where
+module CryptDB_HoTT.db_homotopy_old where
 
   idp = \{A}{x} → refl {A} x
    
@@ -297,15 +297,9 @@ module programming.db_homotopy where
 
   --- Partial Bijection -end-
 
-  coe-biject : {A : Set} {l : Nat} → ((String × Fin l) × Vec A l) ≡ (Fin l × Vec A (suc l)) → (((String × Fin l) × Vec A l) ≃ (Fin l × Vec A (suc l)))
-  coe-biject path with univalence 
-  ... | (f , eq) = f path
-
-  coe : {A : Set} {l : Nat} → ((String × Fin l) × Vec A l) ≡ (Fin l × Vec A (suc l)) → (((String × Fin l) × Vec A l) → (Fin l × Vec A (suc l)))
-  coe path = fst (coe-biject path)
 
   interp-add : {m : Nat} {s : String} → (i : Fin m) → (patch : (tab m ↔ s ↔ i) ≡ (tab (suc m))) → ((String × Fin m) × Vec String m) → (Fin m × (Vec String (suc m)))
-  interp-add {m} {s} i addP2 = coe (ap (I {m} {s}) addP2)
+  interp-add {m} {s} i addP2 = coe' (ap (I {m} {s}) addP2)
   
   interp-add' : {m : Nat} {s : String} → (i : Fin m) → (patch : (tab m ↔ s ↔ i) ≡ (tab (suc m))) → (Vec String m → Vec String (suc m))
   interp-add' {m} {s} i addP2 = add i s

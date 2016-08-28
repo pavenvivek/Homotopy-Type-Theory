@@ -1,14 +1,14 @@
 {-# OPTIONS --type-in-type --without-K #-}
 
 open import Function renaming (_∘_ to _○_)
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
 
-open import programming.cryptography.Paillier-Cryptosystem
+open import CryptDB_HoTT.cryptography.Paillier-Cryptosystem
 
-module programming.cryptography.encrypted-increment where
+module CryptDB_HoTT.cryptography.encrypted-increment where
 
 -- Encrypted increment query
 

@@ -4,14 +4,14 @@ open import Data.Bool
 open import Function renaming (_∘_ to _○_)
 open import Data.Product using (_×_; _,_; Σ; Σ-syntax; proj₁; proj₂)
 
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
 
-open import programming.cryptography.OPE-Cryptosystem
+open import CryptDB_HoTT.cryptography.OPE-Cryptosystem
 
-module programming.cryptography.ElGamal-Cryptosystem where
+module CryptDB_HoTT.cryptography.ElGamal-Cryptosystem where
 
 -- ElGamal Crypto-system
 
@@ -63,6 +63,37 @@ ElGamal-decrypt'' p cipher-text = let private-key : Nat
 
 ElGamal-decrypt : {l : Nat} → (p : Nat) → (cipher-text : Vec ((Int × Int) × Int) l) → Vec Int l
 ElGamal-decrypt {l} p cipher-text = loop {(Int × Int) × Int} {Int} l (ElGamal-decrypt'' p) cipher-text
+
+
+ElGamal-encrypt2' : (ct : (Int × Int) × Int) → Int
+ElGamal-encrypt2' ct = let c1 : Nat
+                           c1 = proj₁ (proj₁ ct) 
+
+                           c2 : Nat
+                           c2 = proj₂ (proj₁ ct)
+
+                           x : Nat
+                           x = proj₂ ct
+
+                       in (((c1 * 100) + c2) * 1000000000) + x
+
+ElGamal-encrypt2 : {l : Nat} → (p : Nat) → (ct : Vec ((Int × Int) × Int) l) → Vec Int l
+ElGamal-encrypt2 {l} p ct = loop {(Int × Int) × Int} {Int} l ElGamal-encrypt2' ct
+
+ElGamal-decrypt2' : Int → (Int × Int) × Int
+ElGamal-decrypt2' enc-int = let c1 : Nat
+                                c1 = div enc-int 100000000000
+                                       
+                                c2 : Nat
+                                c2 = mod (div enc-int 1000000000) 100
+                                       
+                                x : Nat
+                                x = mod enc-int 1000000000
+                                       
+                            in (c1 , c2) , x
+
+ElGamal-decrypt2 : {l : Nat} → (p : Nat) → Vec Int l → Vec ((Int × Int) × Int) l
+ElGamal-decrypt2 {l} p enc-int = loop {Int} l ElGamal-decrypt2' enc-int
 
 postulate
   ElGamal-dec-enc-inv : {p : Nat} {l : Nat} → (message : Vec Int l) → (ElGamal-decrypt p (ElGamal-encrypt p message)) ≡ message

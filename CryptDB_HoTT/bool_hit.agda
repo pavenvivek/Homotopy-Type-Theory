@@ -3,12 +3,12 @@
 open import Data.Bool
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
 
-module programming.bool_hit where
+module CryptDB_HoTT.bool_hit where
 
   module hit where
 
@@ -70,13 +70,6 @@ module programming.bool_hit where
       apd (indS¹ {C} cbase cloop) loop ≡ cloop
   -}
 
-  coe-biject : {A : Set} {l : Nat} → (Vec A l ≡ Vec A l) → (Vec A l ≃ Vec A l)
-  coe-biject path with univalence 
-  ... | (f , eq) = f path
-
-  coe : {A : Set} {l : Nat} → (Vec A l ≡ Vec A l) → (Vec A l → Vec A l)
-  coe path = fst (coe-biject path)
-
   I : {l : Nat} → R → Set
   I {l} = rec {l} (Vec Bool l) (switch-path {l})
 
@@ -85,7 +78,7 @@ module programming.bool_hit where
   
   
   interp : {m : Nat} → (patch : (tab m) ≡ (tab m)) → (Vec Bool m) → (Vec Bool m)
-  interp {m} switch = coe (ap (I {m}) switch)
+  interp {m} switch = coe' (ap (I {m}) switch)
 
   interp' : {m : Nat} → (patch : (tab m) ≡ (tab m)) → (Vec Bool m) → (Vec Bool m)
   interp' {m} switch = switchB

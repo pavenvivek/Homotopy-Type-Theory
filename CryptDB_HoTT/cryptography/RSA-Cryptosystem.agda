@@ -3,12 +3,12 @@
 open import Function renaming (_∘_ to _○_)
 open import Data.Product using (_×_; _,_; Σ; Σ-syntax; proj₁; proj₂)
 
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
 
-module programming.cryptography.RSA-Cryptosystem where
+module CryptDB_HoTT.cryptography.RSA-Cryptosystem where
 
 -- RSA Crypto-system
 

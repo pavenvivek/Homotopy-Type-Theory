@@ -1,12 +1,12 @@
 {-# OPTIONS --type-in-type --without-K #-}
 
 open import Function renaming (_∘_ to _○_)
-open import programming.agda_lib.Nat
-open import programming.agda_lib.Utils
-open import programming.agda_lib.Vector
-open import programming.agda_lib.Equiv
+open import CryptDB_HoTT.agda_lib.Nat
+open import CryptDB_HoTT.agda_lib.Utils
+open import CryptDB_HoTT.agda_lib.Vector
+open import CryptDB_HoTT.agda_lib.Equiv
 
-module programming.cryptography.increment-path where
+module CryptDB_HoTT.cryptography.increment-path where
 
 --  increments the given vector by 100
 
