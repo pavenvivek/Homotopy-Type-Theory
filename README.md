@@ -1,1 +1,1 @@
-# Homotopy-Type-Thoery
+# Homotopy-Type-Theory
