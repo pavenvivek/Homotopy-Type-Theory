@@ -1,6 +1,7 @@
 {-# OPTIONS --type-in-type --without-K #-}
 
 open import Data.Bool
+open import Function renaming (_∘_ to _○_)
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 
 open import CryptDB_HoTT.agda_lib.Nat
@@ -80,17 +81,43 @@ module CryptDB_HoTT.bool_hit where
   interp : {m : Nat} → (patch : (tab m) ≡ (tab m)) → (Vec Bool m) → (Vec Bool m)
   interp {m} switch = coe' (ap (I {m}) switch)
 
-  interp' : {m : Nat} → (patch : (tab m) ≡ (tab m)) → (Vec Bool m) → (Vec Bool m)
-  interp' {m} switch = switchB
-  
-
   example : Vec Bool 3
   example = true :: (false :: (true :: []))
 
-  patch1 = (switch {3})
+  test-1 : Vec Bool 3
+  test-1 = interp (switch {3}) example
 
-  {-
-     run commands:
-     ------------
-       - (interp' patch1) example
-  -} 
+  postulate
+    by-defn : (coe-biject (switch-path {3})) ≡ (switch-bij≃ {3})
+
+  test-1-pf : test-1 ≡ (false :: (false :: (true :: [])))
+  test-1-pf = (begin
+                test-1 ≡⟨ refl _ ⟩
+                interp (switch {3}) (true :: (false :: (true :: []))) ≡⟨ refl _ ⟩
+                (coe' (ap (I {3}) (switch {3}))) (true :: (false :: (true :: []))) ≡⟨ ap (λ x → coe' x (true :: (false :: (true :: [])))) (I[switch] {3}) ⟩
+                (coe' (switch-path {3})) (true :: (false :: (true :: []))) ≡⟨ refl _ ⟩
+                (fst (coe-biject (switch-path {3}))) (true :: (false :: (true :: []))) ≡⟨ ap (λ x → fst x (true :: (false :: (true :: [])))) by-defn ⟩
+                (fst (switch-bij≃ {3})) (true :: (false :: (true :: []))) ≡⟨ refl _ ⟩
+                (switchB {3}) (true :: (false :: (true :: []))) ≡⟨ refl _ ⟩
+                (false :: (false :: (true :: []))) ∎)
+                
+  interp' : {m : Nat} → (query : (tab m) ≡ (tab m)) → (Vec Bool m) ≃ (Vec Bool m)
+  interp' {m} switch = coe-biject (ap (I {m}) switch)
+
+  postulate
+    α3 : {A B C : Set} → (f1 : A → B) → (f2 : B → C) → (g1 : B → A) → (g2 : C → B) → ((f2 ○ f1) ○ (g1 ○ g2)) ∼ id
+    β3 : {A B C : Set} → (f1 : A → B) → (f2 : B → C) → (h1 : B → A) → (h2 : C → B) → ((h1 ○ h2) ○ (f2 ○ f1)) ∼ id
+
+  _∘E_ : {A B C : Set} → A ≃ B → B ≃ C → A ≃ C
+  _∘E_ (f1 , mkisequiv g1 α1 h1 β1) (f2 , mkisequiv g2 α2 h2 β2)  = f2 ○ f1 , mkisequiv (g1 ○ g2) (α3 f1 f2 g1 g2) (h1 ○ h2) (β3 f1 f2 h1 h2)
+
+  postulate
+    coe-biject-comp : {m : Nat} → (p q : (tab m) ≡ (tab m)) → coe-biject (ap (I {m}) p ∘ ap I q) ≡ coe-biject (ap I p) ∘E coe-biject (ap I q)
+
+  interp'-eqpf : {m : Nat} → (p q : (tab m) ≡ (tab m)) → interp' (p ∘ q) ≡ (interp' p) ∘E (interp' q)
+  interp'-eqpf {m} p q = begin
+                           interp' (p ∘ q) ≡⟨ refl _ ⟩
+                           coe-biject (ap I (p ∘ q)) ≡⟨ ap (λ x → coe-biject x) (apfTrans I p q) ⟩
+                           coe-biject (ap I p ∘ ap I q) ≡⟨ coe-biject-comp p q ⟩
+                           coe-biject (ap I p) ∘E coe-biject (ap I q) ≡⟨ refl _ ⟩
+                           (interp' p ∘E interp' q ∎)
